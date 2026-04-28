@@ -1,0 +1,53 @@
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="wa-login-wrap">
+    <div class="wa-login-card">
+        <div class="wa-login-logo">
+            <i class="fa-solid fa-cloud-sun"></i>
+        </div>
+
+        <div class="wa-page-title">Welcome back</div>
+        <div class="wa-page-sub">Sign in to continue to WeatherApp</div>
+
+        <hr class="wa-divider" />
+
+        <form method="post">
+            <div class="mb-3">
+                <label class="wa-label">Username</label>
+                <div style="position:relative;">
+                    <i class="fa-solid fa-user" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#9ca3af; font-size:13px;"></i>
+                    <input name="Username"
+                           class="wa-input"
+                           style="padding-left:34px;"
+                           placeholder="Enter your username" />
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="wa-label">Password</label>
+                <div style="position:relative;">
+                    <i class="fa-solid fa-lock" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#9ca3af; font-size:13px;"></i>
+                    <input name="Password"
+                           type="password"
+                           class="wa-input"
+                           style="padding-left:34px;"
+                           placeholder="Enter your password" />
+                </div>
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="wa-alert-error mb-3">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    @ViewBag.Error
+                </div>
+            }
+
+            <button type="submit" class="wa-btn-primary w-100 justify-content-center">
+                Sign in
+            </button>
+        </form>
+    </div>
+</div>

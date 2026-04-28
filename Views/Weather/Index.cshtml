@@ -1,0 +1,114 @@
+@model WeatherApp.Models.WeatherResult
+
+@{
+    ViewData["Title"] = "Weather Search";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="wa-card">
+            <div class="wa-page-title">
+                <i class="fa-solid fa-magnifying-glass me-2" style="color:#378add;"></i> Weather search
+            </div>
+            <div class="wa-page-sub">Search or select a city to get current weather data</div>
+
+            <form method="post">
+                <div class="d-flex gap-2 align-items-start">
+                    <div class="flex-grow-1">
+                        <select name="city" id="citySelect">
+                            <option value="">-- Select or search a city --</option>
+                            @foreach (var c in ViewBag.Cities as List<string>)
+                            {
+                                if (ViewBag.City == c)
+                                {
+                                    <option value="@c" selected>@c</option>
+                                }
+                                else
+                                {
+                                    <option value="@c">@c</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="wa-btn-primary" style="height:38px; white-space:nowrap;">
+                        <i class="fa-solid fa-cloud-sun"></i> Get weather
+                    </button>
+                </div>
+            </form>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="wa-alert-error mt-3">
+                    <i class="fa-solid fa-circle-exclamation"></i> @ViewBag.Error
+                </div>
+            }
+
+            @if (Model != null)
+            {
+                <hr class="my-4" style="border-color: #e5e9f0;" />
+
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <i class="fa-solid fa-location-dot" style="color:#378add;"></i>
+                    <div class="wa-page-title mb-0">@ViewBag.City</div>
+                </div>
+                <div class="wa-page-sub">Current weather conditions</div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-4">
+                        <div class="wa-metric">
+                            <div class="wa-metric-label">
+                                <i class="fa-solid fa-droplet me-1"></i> Humidity
+                            </div>
+                            <div class="wa-metric-value">
+                                @Model.Humidity<span class="wa-metric-unit">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="wa-metric">
+                            <div class="wa-metric-label">
+                                <i class="fa-solid fa-temperature-arrow-down me-1"></i> Temp min
+                            </div>
+                            <div class="wa-metric-value">
+                                @Model.TempMin<span class="wa-metric-unit">°C</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="wa-metric">
+                            <div class="wa-metric-label">
+                                <i class="fa-solid fa-temperature-arrow-up me-1"></i> Temp max
+                            </div>
+                            <div class="wa-metric-value">
+                                @Model.TempMax<span class="wa-metric-unit">°C</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="post" asp-action="Save">
+                    <input type="hidden" name="city" value="@ViewBag.City" />
+                    <input type="hidden" name="humidity" value="@Model.Humidity" />
+                    <input type="hidden" name="tempMin" value="@Model.TempMin" />
+                    <input type="hidden" name="tempMax" value="@Model.TempMax" />
+                    <button type="submit" class="wa-btn-secondary">
+                        <i class="fa-solid fa-floppy-disk"></i> Save result
+                    </button>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#citySelect').select2({
+                placeholder: '-- Select or search a city --',
+                allowClear: true,
+                width: '100%'
+
+            });
+        });
+    </script>
+}

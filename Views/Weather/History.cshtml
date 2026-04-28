@@ -1,0 +1,131 @@
+@model List<WeatherApp.Models.WeatherRecord>
+
+@{
+    ViewData["Title"] = "Weather History";
+}
+
+<div class="wa-card">
+    <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
+        <div>
+            <div class="wa-page-title">
+                <i class="fa-solid fa-clock-rotate-left me-2" style="color:#378add;"></i> Weather history
+            </div>
+            <div class="wa-page-sub">Your saved weather records — edit and save changes below</div>
+        </div>
+
+        <form method="get" class="d-flex gap-2 align-items-center">
+            <div style="width: 12rem;">
+
+                <select name="city" id="filterSelect">
+                    <option value="">All cities</option>
+                    @foreach (var c in ViewBag.Cities as List<string>)
+                    {
+                        if (ViewBag.CityFilter == c)
+                        {
+                            <option value="@c" selected>@c</option>
+                        }
+                        else
+                        {
+                            <option value="@c">@c</option>
+                        }
+                    }
+                </select>
+            </div>
+            <button type="submit" class="wa-btn-primary" style="height:38px;">
+                <i class="fa-solid fa-filter"></i> Filter
+            </button>
+            <a href="/Weather/History" class="wa-btn-secondary text-decoration-none" style="height:38px;">
+                <i class="fa-solid fa-xmark"></i> Reset
+            </a>
+        </form>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5" style="color:#9ca3af;">
+            <i class="fa-solid fa-inbox" style="font-size:32px; margin-bottom:12px; display:block;"></i>
+            <p class="mb-0">No records found.</p>
+        </div>
+    }
+    else
+    {
+        <form method="post" asp-action="Update">
+            <div class="table-responsive">
+                <table class="wa-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fa-solid fa-city me-1"></i> City</th>
+                            <th><i class="fa-solid fa-droplet me-1"></i> Humidity</th>
+                            <th><i class="fa-solid fa-temperature-arrow-down me-1"></i> Temp min</th>
+                            <th><i class="fa-solid fa-temperature-arrow-up me-1"></i> Temp max</th>
+                            <th><i class="fa-solid fa-calendar me-1"></i> Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            <tr>
+                                <input type="hidden" name="records[@i].Id" value="@Model[i].Id" />
+                                <input type="hidden" name="records[@i].City" value="@Model[i].City" />
+                                <input type="hidden" name="records[@i].RecordDate" value="@Model[i].RecordDate" />
+                                <input type="hidden" name="records[@i].UserId" value="@Model[i].UserId" />
+
+                                <td style="font-weight:500;">
+                                    <i class="fa-solid fa-location-dot me-1" style="color:#378add;"></i>
+                                    @Model[i].City
+                                </td>
+                                <td>
+                                    <input type="number" step="0.01"
+                                           name="records[@i].Humidity"
+                                           value="@Model[i].Humidity"
+                                           class="wa-table-input" />
+                                    <span style="color:#9ca3af; font-size:11px;">%</span>
+                                </td>
+                                <td>
+                                    <input type="number" step="0.01"
+                                           name="records[@i].TempMin"
+                                           value="@Model[i].TempMin"
+                                           class="wa-table-input" />
+                                    <span style="color:#9ca3af; font-size:11px;">°C</span>
+                                </td>
+                                <td>
+                                    <input type="number" step="0.01"
+                                           name="records[@i].TempMax"
+                                           value="@Model[i].TempMax"
+                                           class="wa-table-input" />
+                                    <span style="color:#9ca3af; font-size:11px;">°C</span>
+                                </td>
+                                <td style="color:#6b7280; font-size:12px;">
+                                    <i class="fa-regular fa-clock me-1"></i>
+                                    @Model[i].RecordDate.ToString("yyyy-MM-dd HH:mm")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 pt-3 d-flex gap-2" style="border-top:1px solid #e5e9f0;">
+                <button type="submit" class="wa-btn-primary">
+                    <i class="fa-solid fa-floppy-disk"></i> Save changes
+                </button>
+                <a href="/Weather/History" class="wa-btn-secondary text-decoration-none">
+                    <i class="fa-solid fa-rotate-left"></i> Discard
+                </a>
+            </div>
+        </form>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#filterSelect').select2({
+                placeholder: 'All cities',
+                allowClear: true,
+                width: '12rem'
+
+            });
+        });
+    </script>
+}
